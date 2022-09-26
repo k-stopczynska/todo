@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- displays site properly based on user's device -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="./images/favicon-32x32.png"
+    />
+    <link href="./style.css" rel="stylesheet" />
+    <script src="./app.js" defer></script>
+
+    <title>Frontend Mentor | Todo app</title>
+  </head>
+  <body>
+    <main class="container container__main">
+      <header class="header header__main">
+        <h1>Todo</h1>
+        <button class="button button__switch"></button>
+      </header>
+      <section>
+        <div class="wrapper wrapper__input">
+          <button class="button button__input"></button>
+          <input type="text" id="user-input" placeholder="Create a new todo" />
+        </div>
+        <div id="app"></div>
+      </section>
+      <div class="wrapper wrapper__bottom">
+        <div class="button-left-container">
+          <p id="items-left">items left</p>
+          <button class="button button_list button__clear__all">
+            Clear Completed
+          </button>
+        </div>
+        <div class="lists-container">
+          <button class="button button__list" id="all">All</button>
+          <button class="button button__list" id="active">Active</button>
+          <button class="button button__list" id="completed">Completed</button>
+        </div>
+      </div>
+      <div class="wrapper wrapper__drag">
+        <p>Drag and drop to reorder list</p>
+      </div>
+    </main>
+    <footer>
+      <div class="attribution">
+        Challenge by
+        <a href="https://www.frontendmentor.io?ref=challenge" target="_blank"
+          >Frontend Mentor</a
+        >. Coded by <a href="#">Your Name Here</a>.
+      </div>
+    </footer>
+  </body>
+</html>
