@@ -2,27 +2,32 @@
 /*COLORS*/
 /*Primary*/
 :root {
-  --Bright-Blue: hsl(220, 98%, 61%);
-  --Check-Background: linear-gradient hsl(192, 100%, 67%) to hsl(280, 87%, 65%);
-
-  /*Light Theme*/
-
-  --Very-Light-Gray: var(hsl(0, 0%, 98%));
-  --Very-Light-Grayish-Blue: hsl(236, 33%, 92%);
-  --Light-Grayish-Blue: hsl(233, 11%, 84%);
-  --Dark-Grayish-Blue: hsl(236, 9%, 61%);
-  --Very-Dark-Grayish-Blue: hsl(235, 19%, 35%);
+  --button-active: hsl(220, 98%, 61%);
+  --check-background: linear-gradient hsl(192, 100%, 67%) to hsl(280, 87%, 65%);
 
   /*Dark Theme*/
 
-  --Very-Dark-Blue: hsl(235, 21%, 11%);
+  --background-image: url("./images/bg-mobile-dark.jpg");
+  --background-color: hsl(235, 21%, 11%);
   --Very-Dark-Desaturated-Blue: hsl(235, 24%, 19%);
-  --Light-Grayish-Blue: hsl(234, 39%, 85%);
-  --Light-Grayish-Blue-hover: hsl(236, 33%, 92%);
-  --Dark-Grayish-Blue: hsl(234, 11%, 52%);
-  --Very-Dark-Grayish-Blue: hsl(233, 14%, 35%);
-  --Very-Dark-Grayish-Blue-Bg: hsl(237, 14%, 26%);
+  --color-header: hsl(234, 39%, 85%);
+  --color-list-item: hsl(234, 39%, 85%);
+  --color-list-item-hover: hsl(236, 33%, 92%);
+  --color-list: hsl(234, 11%, 52%);
+  --list-item-completed: hsl(233, 14%, 35%);
+  --bg-color-list: hsl(237, 14%, 26%);
+  --switch-bg-image: url("./images//icon-sun.svg")
 }
+  /*Light Theme*/
+  .lightMode {
+  --background-image: url("./images/bg-mobile-light.jpg");
+  --background-color: hsl(0, 0%, 98%);
+  --color-list: hsl(236, 33%, 92%);
+  --color-header: hsl(233, 11%, 84%);
+  --bg-color-list: hsl(236, 9%, 61%);
+  --color-list-item: hsl(235, 19%, 35%);
+  --switch-bg-image: url("./images//icon-moon.svg")
+  }
 
 * {
   margin: 0;
@@ -31,8 +36,8 @@
 }
 
 body {
-  background-color: var(--Very-Dark-Blue);
-  background-image: url("./images/bg-mobile-dark.jpg");
+  background-color: var(--background-color);
+  background-image: var(--background-image);
   background-repeat: no-repeat;
   background-size: contain;
   font-family: "Josefin Sans", sans-serif;
@@ -46,7 +51,7 @@ body {
 }
 
 h1 {
-  color: var(--Light-Grayish-Blue);
+  color: var(--color-header);
   text-transform: uppercase;
   font-size: 2rem;
   letter-spacing: 0.5em;
@@ -67,7 +72,7 @@ h1 {
 
 .button__switch {
   background-color: transparent;
-  background-image: url("./images/icon-sun.svg");
+  background-image: var(--switch-bg-image);
   background-position: center center;
   background-repeat: no-repeat;
   border: none;
@@ -84,7 +89,7 @@ h1 {
 
 .todo-list,
 #user-input {
-  background: var(--Very-Dark-Grayish-Blue-Bg);
+  background: var(--bg-color-list);
   border: 1px solid transparent;
   border-radius: 5px;
   width: 100%;
@@ -97,7 +102,7 @@ h1 {
 
 #user-input::placeholder {
   font-family: "Josefin Sans", sans-serif;
-  color: var(--Dark-Grayish-Blue);
+  color: var(--color-list);
 }
 
 .wrapper__input {
@@ -120,9 +125,13 @@ h1 {
 
 .button__input,
 .button__completed {
-  background: var(--Very-Dark-Grayish-Blue-Bg);
-  border: 1px solid var(--Dark-Grayish-Blue);
+  background: var(--bg-color-list);
+  border: 1px solid var(--color-list);
   border-radius: 50%;
+}
+
+.button-completed.checked {
+  background: var(--check-background);
 }
 
 .button__input {
@@ -137,8 +146,8 @@ h1 {
 }
 
 .todo-item {
-  color: var(--Light-Grayish-Blue);
-  border-bottom: 1px solid var(--Dark-Grayish-Blue);
+  color: var(--color-list-item);
+  border-bottom: 1px solid var(--color-list);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -151,7 +160,7 @@ h1 {
 }
 
 .button-left-container {
-  background: var(--Very-Dark-Grayish-Blue-Bg);
+  background: var(--bg-color-list);
   border-radius: 5px;
   padding: 1em;
   display: flex;
@@ -164,14 +173,14 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: var(--Very-Dark-Grayish-Blue-Bg);
+  background: var(--bg-color-list);
   border-radius: 5px;
   margin-top: 1em;
   padding: 1em;
 }
 
 .wrapper__drag {
-  color: var(--Dark-Grayish-Blue);
+  color: var(--color-list);
   font-size: 16px;
   margin-top: 2em;
   display: flex;
@@ -181,11 +190,16 @@ h1 {
 .button__list,
 .button__clear__all,
 .button-left-container>p {
-  color: var(--Dark-Grayish-Blue);
-  background: var(--Very-Dark-Grayish-Blue-Bg);
+  color: var(--color-list);
+  background: var(--bg-color-list);
   border: none;
   font-family: "Josefin Sans", sans-serif;
   font-size: 16px;
+}
+
+.button__list.active,
+.button__clear__all.active {
+  color: var(--button-active);
 }
 
 .attribution {

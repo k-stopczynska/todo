@@ -65,13 +65,13 @@ class TodoList extends Component {
     super(renderHookId, true);
     //this.type = type;
     this.fetchTodoItems();
+    this.getAllTodos();
     this.connectUserInputButton();
     this.connectRemoveButtons();
     this.connectSwitchButtons();
-    //this.switchListHandler();
     this.connectSwitchListButtons();
     this.updateItemsLeft();
-    this.connectClearAllButton()
+    this.connectClearAllButton();
   }
 
   fetchTodoItems() {
@@ -81,7 +81,12 @@ class TodoList extends Component {
       new Todo(Math.random(), "cleaning house"),
       new Todo(Math.random(), "learning JS"),
     ];
-    this.renderTodos(this.className, this.todos);
+    this.renderTodos("list__active", this.todos);
+  }
+
+  getAllTodos() {
+    this.allTodos = [...this.todos, ...this.completedTodos];
+    return this.allTodos;
   }
 
   getUserInputValue() {
@@ -99,8 +104,9 @@ class TodoList extends Component {
   updateTodos(e) {
     e.preventDefault();
     this.todos.push(this.getUserInputValue());
-    console.log(e.target.id, this.className, this.array);
     this.render(this.className, this.array);
+    this.updateItemsLeft();
+    this.getAllTodos();
   }
 
   renderTodos(className, array) {
@@ -110,15 +116,13 @@ class TodoList extends Component {
   }
 
   render(className, array) {
-    if (className === undefined && array === undefined) {
-      this.render('list__active', this.todos);
-    }
-    const previousList = document.getElementsByTagName('ul')[0];
+    const previousList = document.getElementsByTagName("ul")[0];
     if (previousList) {
       previousList.remove();
     }
+    if (previousList) {console.log(className, this.todos);}
     const todoList = this.createElement("ul", "todo-list", [
-      new ElementAttribute("id", className),
+      new ElementAttribute("id", (className = "list__active")),
     ]);
     if (array && array.length > 0) {
       this.renderTodos(className, array);
@@ -130,6 +134,7 @@ class TodoList extends Component {
 
   movingTodo(e, array1, array2) {
     const movingItem = e.target.closest("li");
+    console.log(array2);
     for (let i = 0; i < array1.length; i++) {
       if (array1[i].itemId == movingItem.id) {
         if (array2) {
@@ -138,12 +143,15 @@ class TodoList extends Component {
         array1.splice(i, 1);
       }
     }
-    this.render(this.className, this.array);
+    this.render(this.className, this.todos);
     this.updateItemsLeft();
+    this.getAllTodos();
   }
 
   removeTodoItem(e) {
     this.movingTodo(e, this.todos);
+    this.movingTodo(e, this.completedTodos);
+    this.getAllTodos();
   }
 
   connectRemoveButtons() {
@@ -154,8 +162,11 @@ class TodoList extends Component {
   }
 
   switchTodoItem(e) {
+   e.target.classList.add('checked');
     this.completedTodos = [];
     this.movingTodo(e, this.todos, this.completedTodos);
+    this.getAllTodos();
+    console.log(this.completedTodos, this.todos, this.allTodos);
   }
 
   connectSwitchButtons() {
@@ -166,33 +177,41 @@ class TodoList extends Component {
   }
 
   switchListHandler(e) {
-    // if (e === undefined) {
-    // this.render('list__active', this.todos);
-    // } else {
     const buttonId = e.target.id;
-buttonId === 'active' ? this.render('list__active', this.todos) : buttonId === 'completed' ? this.render('list__completed', this.completedTodos) : this.render('list__all', this.allTodos);
-   // }
+    buttonId === "active"
+      ? this.render("list__active", this.todos)
+      : buttonId === "completed"
+      ? this.render("list__completed", this.completedTodos)
+      : this.render("list__all", this.allTodos);
   }
 
   connectSwitchListButtons() {
-    const switchListButtons = document.querySelectorAll('.button__list');
-    switchListButtons.forEach((switchListButton) => switchListButton.addEventListener('click', this.switchListHandler.bind(this)));
+    const switchListButtons = document.querySelectorAll(".button__list");
+    switchListButtons.forEach((switchListButton) =>
+      switchListButton.addEventListener(
+        "click",
+        this.switchListHandler.bind(this)
+      )
+    );
   }
 
   updateItemsLeft() {
-    const itemsLeft = document.getElementById('items-left');
+    const itemsLeft = document.getElementById("items-left");
     itemsLeft.innerHTML = `${this.todos.length} items left`;
   }
 
   clearCompletedTodosHandler() {
-    const itemsToRemove = this.completedTodos.length
+    const itemsToRemove = this.completedTodos.length;
     this.completedTodos.splice(0, itemsToRemove);
-    this.render('list__completed', this.completedTodos);
+    this.render("list__completed", this.completedTodos);
   }
 
   connectClearAllButton() {
-    const clearAllButton = document.querySelector('.button__clear__all');
-    clearAllButton.addEventListener('click', this.clearCompletedTodosHandler.bind(this));
+    const clearAllButton = document.querySelector(".button__clear__all");
+    clearAllButton.addEventListener(
+      "click",
+      this.clearCompletedTodosHandler.bind(this)
+    );
   }
 }
 
