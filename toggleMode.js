@@ -24,3 +24,12 @@ lightModeToggleButton.addEventListener("click", () => {
         disableLightMode();
     }
 });
+
+const listsContainer = document.querySelector('.lists-container');
+const container = document.querySelector('.button-left-container');
+ const containerHandler = () => {
+    container.appendChild(listsContainer);
+ }
+ if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+  containerHandler();
+  }

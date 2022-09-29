@@ -1,7 +1,8 @@
 class Todo {
-  constructor(itemId, value) {
+  constructor(itemId, value, isCompleted = false) {
     this.itemId = itemId;
     this.value = value;
+    this.isCompleted = isCompleted;
   }
 }
 
@@ -63,9 +64,7 @@ class TodoList extends Component {
   allTodos = [];
   constructor(renderHookId) {
     super(renderHookId, true);
-    //this.type = type;
     this.fetchTodoItems();
-    this.getAllTodos();
     this.connectUserInputButton();
     this.connectRemoveButtons();
     this.connectSwitchButtons();
@@ -76,17 +75,14 @@ class TodoList extends Component {
 
   fetchTodoItems() {
     this.todos = [
-      new Todo(Math.random(), "cooking"),
-      new Todo(Math.random(), "walking dogs"),
-      new Todo(Math.random(), "cleaning house"),
-      new Todo(Math.random(), "learning JS"),
+      new Todo(Math.random(), "cooking", false),
+      new Todo(Math.random(), "walking dogs", false),
+      new Todo(Math.random(), "cleaning house", false),
+      new Todo(Math.random(), "learning JS", false),
     ];
-    this.renderTodos("list__active", this.todos);
-  }
-
-  getAllTodos() {
-    this.allTodos = [...this.todos, ...this.completedTodos];
-    return this.allTodos;
+    this.completedTodos = [];
+    this.allTodos = [...this.completedTodos, ...this.todos];
+    this.renderTodos("list__all", this.allTodos);
   }
 
   getUserInputValue() {
@@ -103,26 +99,32 @@ class TodoList extends Component {
 
   updateTodos(e) {
     e.preventDefault();
+    const previousListId = document.getElementsByTagName("ul")[0];
     this.todos.push(this.getUserInputValue());
-    this.render(this.className, this.array);
+    this.allTodos = [...this.completedTodos, ...this.todos];
+    this.switchListHelper(previousListId);
     this.updateItemsLeft();
-    this.getAllTodos();
   }
 
   renderTodos(className, array) {
     for (const todoEl of array) {
+//       if (todoEl.isCompleted) {
+// new TodoItem(todoEl, className).classList.add('checked');
+//       }
       new TodoItem(todoEl, className);
     }
   }
 
   render(className, array) {
     const previousList = document.getElementsByTagName("ul")[0];
-    if (previousList) {
+     if (previousList) {
       previousList.remove();
+    } else {
+      className = 'list__all';
+      array = this.allTodos;
     }
-    if (previousList) {console.log(className, this.todos);}
     const todoList = this.createElement("ul", "todo-list", [
-      new ElementAttribute("id", (className = "list__active")),
+      new ElementAttribute("id", className),
     ]);
     if (array && array.length > 0) {
       this.renderTodos(className, array);
@@ -133,25 +135,24 @@ class TodoList extends Component {
   }
 
   movingTodo(e, array1, array2) {
+    const previousListId = document.getElementsByTagName("ul")[0].id;
     const movingItem = e.target.closest("li");
-    console.log(array2);
     for (let i = 0; i < array1.length; i++) {
       if (array1[i].itemId == movingItem.id) {
         if (array2) {
+          array1[i].isCompleted = true;
           array2.push(array1[i]);
         }
         array1.splice(i, 1);
       }
     }
-    this.render(this.className, this.todos);
+    this.switchListHelper(previousListId);
     this.updateItemsLeft();
-    this.getAllTodos();
   }
 
   removeTodoItem(e) {
     this.movingTodo(e, this.todos);
     this.movingTodo(e, this.completedTodos);
-    this.getAllTodos();
   }
 
   connectRemoveButtons() {
@@ -162,27 +163,30 @@ class TodoList extends Component {
   }
 
   switchTodoItem(e) {
-   e.target.classList.add('checked');
     this.completedTodos = [];
     this.movingTodo(e, this.todos, this.completedTodos);
-    this.getAllTodos();
-    console.log(this.completedTodos, this.todos, this.allTodos);
   }
 
   connectSwitchButtons() {
     const switchButtons = document.querySelectorAll(".button__completed");
     switchButtons.forEach((switchButton) =>
       switchButton.addEventListener("click", this.switchTodoItem.bind(this))
-    );
+    )
+  }
+
+  switchListHelper(buttonId, previousListId) {
+    buttonId === "active" ||  previousListId === "list__active"
+    ? this.render("list__active", this.todos)
+    : buttonId === "completed" ||  previousListId === "list__completed"
+    ? this.render("list__completed", this.completedTodos)
+    : this.render("list__all", this.allTodos);
   }
 
   switchListHandler(e) {
+    document.querySelectorAll(".button__list").forEach((switchListButton) => switchListButton.classList.remove('active'));
     const buttonId = e.target.id;
-    buttonId === "active"
-      ? this.render("list__active", this.todos)
-      : buttonId === "completed"
-      ? this.render("list__completed", this.completedTodos)
-      : this.render("list__all", this.allTodos);
+    e.target.classList.add('active');
+    this.switchListHelper(buttonId);
   }
 
   connectSwitchListButtons() {
@@ -203,7 +207,7 @@ class TodoList extends Component {
   clearCompletedTodosHandler() {
     const itemsToRemove = this.completedTodos.length;
     this.completedTodos.splice(0, itemsToRemove);
-    this.render("list__completed", this.completedTodos);
+    this.render(this.className, this.array);
   }
 
   connectClearAllButton() {
