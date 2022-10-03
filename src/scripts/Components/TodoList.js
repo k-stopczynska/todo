@@ -9,6 +9,7 @@ export class TodoList extends Component {
   allTodos = [];
   constructor(renderHookId) {
     super(renderHookId, true);
+    this.getLocalStorage();
     this.fetchTodoItems();
     this.connectUserInputButton();
     this.connectRemoveButtons();
