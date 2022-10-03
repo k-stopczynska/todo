@@ -30,7 +30,7 @@
   --color-list-item: hsl(235, 19%, 35%);
   --color-list-item-hover: hsl(237, 14%, 26%);
   --switch-bg-image: url("../../images//icon-moon.svg");
-  --opacity-button-clear: .5;
+  --opacity-button-clear: 0.5;
 }
 
 * {
@@ -137,6 +137,7 @@ h1 {
   padding: 1em 1em 1em 4em;
   color: var(--color-list-item);
   font-family: "Josefin Sans", sans-serif;
+  outline: none;
 }
 
 #user-input::placeholder {
@@ -176,13 +177,14 @@ h1 {
     linear-gradient(120deg, hsl(192, 100%, 67%), hsl(280, 87%, 65%)) border-box;
   border: 1px solid transparent;
 }
-.checked>.wrapper__input>button {
-  background: url("../../images/icon-check.svg"), linear-gradient(120deg, hsl(192, 100%, 67%), hsl(280, 87%, 65%));
+.checked > .wrapper__input > button {
+  background: url("../../images/icon-check.svg"),
+    linear-gradient(120deg, hsl(192, 100%, 67%), hsl(280, 87%, 65%));
   background-repeat: no-repeat;
   background-position: center center;
 }
 
-.checked>.wrapper__input>p {
+.checked > .wrapper__input > p {
   color: var(--list-item-completed);
   text-decoration: line-through;
 }
@@ -198,6 +200,14 @@ h1 {
   border: none;
   opacity: var(--opacity-button-clear);
 }
+@media (min-width: 920px) {
+  .button__clear {
+    opacity: 0;
+  }
+  .todo-item:hover > .button__clear {
+    opacity: var(--opacity-button-clear);
+  }
+}
 
 .todo-item {
   color: var(--color-list-item);
@@ -209,7 +219,7 @@ h1 {
 }
 
 .draggable {
-  background-color: red;
+  background-color: var(--background-color);
 }
 
 .wrapper__bottom {
@@ -224,7 +234,7 @@ h1 {
 
 @media (min-width: 1000px) {
   .wrapper__bottom {
-    display: none
+    display: none;
   }
 
   .wrapper__bottom__desktop {
@@ -239,7 +249,7 @@ h1 {
     border-bottom-right-radius: 5px;
   }
 
-  .wrapper__bottom__desktop>p {
+  .wrapper__bottom__desktop > p {
     color: var(--wrapper-bottom-placeholder-color);
   }
 }
@@ -247,7 +257,7 @@ h1 {
 .button-left-container {
   background: var(--bg-color-list);
   border-radius: 5px;
- color: var(--wrapper-bottom-placeholder-color);
+  color: var(--wrapper-bottom-placeholder-color);
   padding: 1em;
   display: flex;
   flex-direction: row;
@@ -309,7 +319,7 @@ h1 {
 footer {
   bottom: 0;
   height: 15px;
-  position: fixed;
+  position: static;
 }
 
 .attribution {

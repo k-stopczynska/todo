@@ -33,15 +33,22 @@ export class TodoList extends Component {
 
   fetchTodoItems() {
     this.getLocalStorage();
-    this.todos = [
-      new Todo(Math.random(), "cooking", false),
-      new Todo(Math.random(), "walking dogs", false),
-      new Todo(Math.random(), "cleaning house", false),
-      new Todo(Math.random(), "learning JS", false),
-    ];
-    this.completedTodos = [];
-    this.allTodos = [...this.completedTodos, ...this.todos];
-    this.setLocalStorage();
+    if (this.todos.length === 0 && this.completedTodos.length === 0) {
+      this.todos = [
+        new Todo(Math.random(), "Jog around the park 3x", false),
+        new Todo(Math.random(), "10 minutes meditation", false),
+        new Todo(Math.random(), "Read for 1 hour", false),
+        new Todo(Math.random(), "Pick up groceries", false),
+        new Todo(Math.random(), "Complete Todo App on Frontend Mentor", false),
+      ];
+      this.completedTodos = [
+        new Todo(Math.random(), "Complete online Javascript course", true),
+      ];
+      this.allTodos = [...this.completedTodos, ...this.todos];
+      this.setLocalStorage();
+    } else {
+      this.getLocalStorage();
+    }
     this.renderTodos("list__all", this.allTodos);
   }
 
@@ -50,6 +57,7 @@ export class TodoList extends Component {
     const value = userInput.value;
     const itemId = Math.random();
     const isCompleted = false;
+    userInput.value = '';
     return new Todo(itemId, value, isCompleted);
   }
 
@@ -60,6 +68,7 @@ export class TodoList extends Component {
 
   updateTodos(e) {
     e.preventDefault();
+    this.getLocalStorage();
     const previousListId = document.getElementsByTagName("ul")[0];
     this.todos.push(this.getUserInputValue());
     this.allTodos = [...this.completedTodos, ...this.todos];
@@ -139,11 +148,11 @@ export class TodoList extends Component {
     );
   }
 
-  switchListHelper(buttonId, previousListId) {
+  switchListHelper(id) {
     this.getLocalStorage();
-    buttonId === "active" || previousListId === "list__active"
+      id === "active" || id === "list__active"
       ? this.render("list__active", this.todos)
-      : buttonId === "completed" || previousListId === "list__completed"
+      : id === "completed" || id === "list__completed"
       ? this.render("list__completed", this.completedTodos)
       : this.render("list__all", this.allTodos);
   }
@@ -178,19 +187,22 @@ export class TodoList extends Component {
   }
 
   clearCompletedTodosHandler() {
+    const previousListId = document.getElementsByTagName("ul")[0].id;
     this.getLocalStorage();
     const itemsToRemove = this.completedTodos.length;
     this.completedTodos.splice(0, itemsToRemove);
     this.allTodos = [...this.completedTodos, ...this.todos];
     this.setLocalStorage();
-    this.switchListHelper();
+    this.switchListHelper(previousListId);
   }
 
   connectClearAllButton() {
-    const clearAllButton = document.querySelector(".button__clear__all");
-    clearAllButton.addEventListener(
-      "click",
-      this.clearCompletedTodosHandler.bind(this)
+    const clearAllButtons = document.querySelectorAll(".button__clear__all");
+    clearAllButtons.forEach((clearAllButton) =>
+      clearAllButton.addEventListener(
+        "click",
+        this.clearCompletedTodosHandler.bind(this)
+      )
     );
   }
 
@@ -201,8 +213,8 @@ export class TodoList extends Component {
     if (todoId === e.target.id) {
       return;
     } else {
-      const firstIndex = (elem) => elem.itemId ==  todoId;
-      const secondIndex = (elem) => elem.itemId == e.target.closest('li').id;
+      const firstIndex = (elem) => elem.itemId == todoId;
+      const secondIndex = (elem) => elem.itemId == e.target.closest("li").id;
       const indexToMove = this.todos.findIndex(firstIndex);
       const indexToInsert = this.todos.findIndex(secondIndex);
       const [movingObject] = this.todos.splice(indexToMove, 1);
