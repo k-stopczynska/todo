@@ -1,68 +1,9 @@
-class Todo {
-  constructor(itemId, value, isCompleted = false) {
-    this.itemId = itemId;
-    this.value = value;
-    this.isCompleted = isCompleted;
-  }
-}
+import { Component } from "./Component.js";
+import { ElementAttribute } from "../Utils/ElementAttribute.js";
+import { Todo } from "./Todo.js";
+import { TodoItem } from "./TodoItem.js";
 
-class ElementAttribute {
-  constructor(attrName, attrValue) {
-    this.name = attrName;
-    this.value = attrValue;
-  }
-}
-
-class Component {
-  constructor(renderHookId, doRender = true) {
-    this.renderHookId = renderHookId;
-    if (doRender) {
-      this.render();
-    }
-  }
-
-  createElement(tag, cssClassess, attributes) {
-    const element = document.createElement(tag);
-    if (cssClassess) {
-      element.className = cssClassess;
-    }
-    if (attributes) {
-      for (const attr of attributes) {
-        element.setAttribute(attr.name, attr.value);
-      }
-    }
-    document.getElementById(this.renderHookId).appendChild(element);
-    return element;
-  }
-
-  render() {}
-}
-
-class TodoItem extends Component {
-  constructor(todo, renderHookId, isCompleted = false) {
-    super(renderHookId, false);
-    this.todo = todo;
-    this.isCompleted = isCompleted;
-    this.render();
-  }
-
-  render() {
-    const todoItem = this.createElement("li", "todo-item", [
-      new ElementAttribute("id", `${this.todo.itemId}`)
-    ]);
-    if (this.todo.isCompleted) {
-      todoItem.classList.add('checked');
-    }
-    todoItem.innerHTML = `
-    <div class="wrapper__input">
-    <button class="button button__completed"></button>
-    <p>${this.todo.value}</p>
-    </div>
-    <button class="button button__clear"></button>`;
-  }
-}
-
-class TodoList extends Component {
+export class TodoList extends Component {
   todos = [];
   completedTodos = [];
   allTodos = [];
@@ -75,30 +16,31 @@ class TodoList extends Component {
     this.connectSwitchListButtons();
     this.updateItemsLeft();
     this.connectClearAllButton();
+    this.connectDrop();
   }
 
   setLocalStorage() {
-    localStorage.setItem('todos', JSON.stringify(this.todos));
-    localStorage.setItem('completedTodos', JSON.stringify(this.completedTodos));
-    localStorage.setItem('allTodos', JSON.stringify(this.allTodos));
+    localStorage.setItem("todos", JSON.stringify(this.todos));
+    localStorage.setItem("completedTodos", JSON.stringify(this.completedTodos));
+    localStorage.setItem("allTodos", JSON.stringify(this.allTodos));
   }
 
   getLocalStorage() {
-    this.todos = JSON.parse(localStorage.getItem('todos'));
-    this.completedTodos = JSON.parse(localStorage.getItem('completedTodos'));
-    this.allTodos = JSON.parse(localStorage.getItem('allTodos'));
+    this.todos = JSON.parse(localStorage.getItem("todos"));
+    this.completedTodos = JSON.parse(localStorage.getItem("completedTodos"));
+    this.allTodos = JSON.parse(localStorage.getItem("allTodos"));
   }
 
   fetchTodoItems() {
     this.getLocalStorage();
-    //this.todos = [
-      //new Todo(Math.random(), "cooking", false),
-      //new Todo(Math.random(), "walking dogs", false),
-      //new Todo(Math.random(), "cleaning house", false),
-      //new Todo(Math.random(), "learning JS", false),
-    //];
-    //this.completedTodos = [];
-    //this.allTodos = [...this.completedTodos, ...this.todos];
+    this.todos = [
+      new Todo(Math.random(), "cooking", false),
+      new Todo(Math.random(), "walking dogs", false),
+      new Todo(Math.random(), "cleaning house", false),
+      new Todo(Math.random(), "learning JS", false),
+    ];
+    this.completedTodos = [];
+    this.allTodos = [...this.completedTodos, ...this.todos];
     this.setLocalStorage();
     this.renderTodos("list__all", this.allTodos);
   }
@@ -135,10 +77,10 @@ class TodoList extends Component {
 
   render(className, array) {
     const previousList = document.getElementsByTagName("ul")[0];
-     if (previousList) {
+    if (previousList) {
       previousList.remove();
     } else {
-      className = 'list__all';
+      className = "list__all";
       array = this.allTodos;
     }
     const todoList = this.createElement("ul", "todo-list", [
@@ -149,11 +91,11 @@ class TodoList extends Component {
       this.connectRemoveButtons();
       this.connectSwitchButtons();
       this.connectSwitchListButtons();
+      this.connectDrop();
     }
   }
 
   movingTodo(e, array1, array2) {
-    console.log(this.allTodos);
     const previousListId = document.getElementsByTagName("ul")[0].id;
     const movingItem = e.target.closest("li");
     for (let i = 0; i < array1.length; i++) {
@@ -165,7 +107,6 @@ class TodoList extends Component {
         array1.splice(i, 1);
         this.allTodos = [...this.completedTodos, ...this.todos];
         this.setLocalStorage();
-
       }
     }
     this.switchListHelper(previousListId);
@@ -195,22 +136,26 @@ class TodoList extends Component {
     const switchButtons = document.querySelectorAll(".button__completed");
     switchButtons.forEach((switchButton) =>
       switchButton.addEventListener("click", this.switchTodoItem.bind(this))
-    )
+    );
   }
 
   switchListHelper(buttonId, previousListId) {
     this.getLocalStorage();
-    buttonId === "active" ||  previousListId === "list__active"
-    ? this.render("list__active", this.todos)
-    : buttonId === "completed" ||  previousListId === "list__completed"
-    ? this.render("list__completed", this.completedTodos)
-    : this.render("list__all", this.allTodos);
+    buttonId === "active" || previousListId === "list__active"
+      ? this.render("list__active", this.todos)
+      : buttonId === "completed" || previousListId === "list__completed"
+      ? this.render("list__completed", this.completedTodos)
+      : this.render("list__all", this.allTodos);
   }
 
   switchListHandler(e) {
-    document.querySelectorAll(".button__list").forEach((switchListButton) => switchListButton.classList.remove('active'));
+    document
+      .querySelectorAll(".button__list")
+      .forEach((switchListButton) =>
+        switchListButton.classList.remove("active")
+      );
     const buttonId = e.target.id;
-    e.target.classList.add('active');
+    e.target.classList.add("active");
     this.switchListHelper(buttonId);
   }
 
@@ -227,7 +172,9 @@ class TodoList extends Component {
   updateItemsLeft() {
     this.getLocalStorage();
     let itemsLeft = document.querySelectorAll(".items-left");
-   itemsLeft.forEach((itemLeft) => itemLeft.innerHTML = `${this.todos.length} items left`);
+    itemsLeft.forEach(
+      (itemLeft) => (itemLeft.innerHTML = `${this.todos.length} items left`)
+    );
   }
 
   clearCompletedTodosHandler() {
@@ -246,12 +193,28 @@ class TodoList extends Component {
       this.clearCompletedTodosHandler.bind(this)
     );
   }
-}
 
-class App {
-  static init() {
-    new TodoList("app");
+  dropCompleteHandler(e) {
+    this.getLocalStorage();
+    const previousListId = document.getElementsByTagName("ul")[0].id;
+    const todoId = e.dataTransfer.getData("text/plain");
+    if (todoId === e.target.id) {
+      return;
+    } else {
+      const firstIndex = (elem) => elem.itemId ==  todoId;
+      const secondIndex = (elem) => elem.itemId == e.target.closest('li').id;
+      const indexToMove = this.todos.findIndex(firstIndex);
+      const indexToInsert = this.todos.findIndex(secondIndex);
+      const [movingObject] = this.todos.splice(indexToMove, 1);
+      this.todos.splice(indexToInsert, 0, movingObject);
+      this.allTodos = [...this.completedTodos, ...this.todos];
+      this.setLocalStorage();
+    }
+    this.switchListHelper(previousListId);
+  }
+
+  connectDrop() {
+    const list = document.querySelector(".todo-list");
+    list.addEventListener("drop", this.dropCompleteHandler.bind(this));
   }
 }
-
-App.init();

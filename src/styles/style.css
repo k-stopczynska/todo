@@ -4,8 +4,8 @@
 
   /*Dark Theme*/
 
-  --background-image-mb: url("./images/bg-mobile-dark.jpg");
-  --background-image-dt: url("./images/bg-desktop-dark.jpg");
+  --background-image-mb: url("../../images/bg-mobile-dark.jpg");
+  --background-image-dt: url("../../images/bg-desktop-dark.jpg");
   --background-color: hsl(235, 21%, 11%);
   --wrapper-bottom-placeholder-color: hsl(233, 14%, 35%);
   --color-header: hsl(234, 39%, 85%);
@@ -14,13 +14,13 @@
   --color-list: hsl(234, 11%, 52%);
   --list-item-completed: hsl(233, 14%, 35%);
   --bg-color-list: hsl(235, 24%, 19%);
-  --switch-bg-image: url("./images//icon-sun.svg");
+  --switch-bg-image: url("../../images//icon-sun.svg");
   --opacity-button-clear: 1;
 }
 /*Light Theme*/
 .lightMode {
-  --background-image-mb: url("./images/bg-mobile-light.jpg");
-  --background-image-dt: url("./images/bg-desktop-light.jpg");
+  --background-image-mb: url("../../images/bg-mobile-light.jpg");
+  --background-image-dt: url("../../images/bg-desktop-light.jpg");
   --background-color: hsl(233, 11%, 84%);
   --wrapper-bottom-placeholder-color: hsl(236, 9%, 61%);
   --color-list: hsl(236, 9%, 61%);
@@ -29,7 +29,7 @@
   --bg-color-list: hsl(236, 33%, 92%);
   --color-list-item: hsl(235, 19%, 35%);
   --color-list-item-hover: hsl(237, 14%, 26%);
-  --switch-bg-image: url("./images//icon-moon.svg");
+  --switch-bg-image: url("../../images//icon-moon.svg");
   --opacity-button-clear: .5;
 }
 
@@ -177,7 +177,7 @@ h1 {
   border: 1px solid transparent;
 }
 .checked>.wrapper__input>button {
-  background: url("./images/icon-check.svg"), linear-gradient(120deg, hsl(192, 100%, 67%), hsl(280, 87%, 65%));
+  background: url("../../images/icon-check.svg"), linear-gradient(120deg, hsl(192, 100%, 67%), hsl(280, 87%, 65%));
   background-repeat: no-repeat;
   background-position: center center;
 }
@@ -194,7 +194,7 @@ h1 {
 }
 
 .button__clear {
-  background: url("./images/icon-cross.svg") no-repeat center center;
+  background: url("../../images/icon-cross.svg") no-repeat center center;
   border: none;
   opacity: var(--opacity-button-clear);
 }
@@ -206,6 +206,10 @@ h1 {
   justify-content: space-between;
   align-items: center;
   padding: 0em 1em;
+}
+
+.draggable {
+  background-color: red;
 }
 
 .wrapper__bottom {
