@@ -9,7 +9,6 @@ export class TodoList extends Component {
   allTodos = [];
   constructor(renderHookId) {
     super(renderHookId, true);
-    this.setLocalStorage();
     this.fetchTodoItems();
     this.connectUserInputButton();
     this.connectRemoveButtons();
@@ -34,7 +33,7 @@ export class TodoList extends Component {
 
   fetchTodoItems() {
     this.getLocalStorage();
-    if (this.todos.length === 0 && this.completedTodos.length === 0) {
+    if (!this.todos || !this.completedTodos || this.todos.length === 0 && this.completedTodos.length === 0) {
       this.todos = [
         new Todo(Math.random(), "Jog around the park 3x", false),
         new Todo(Math.random(), "10 minutes meditation", false),
